@@ -1,0 +1,62 @@
+#!/bin/bash 
+
+
+nvcc --compile -O3 -gencode arch=compute_20,code=sm_20  -x cu -o  LBM_cuda.o LBM_cuda.cu
+echo "LBM_cuda"
+
+nvcc --compile -O3 -gencode arch=compute_20,code=sm_20  -x cu -o  bounceback.o bounceback.cu
+echo "bounceback"
+
+nvcc --compile -O3 -gencode arch=compute_20,code=sm_20  -x cu -o  kernels3.o kernels3.cu 
+echo "kernels3"
+
+nvcc --compile -O3 -gencode arch=compute_20,code=sm_20  -x cu -o  check_density.o check_density.cu 
+echo "check density"
+
+nvcc --compile -O3 -gencode arch=compute_20,code=sm_20  -x cu -o  convective_bc.o convective_bc.cu 
+echo "convective"
+
+nvcc --compile -O3 -gencode arch=compute_20,code=sm_20  -x cu -o  global_defines.o global_defines.cu 
+echo "global_defines"
+
+nvcc -O3 --compile  -x c++ -o  init_density.o init_density.cpp 
+echo "init_density"
+
+nvcc --compile -O3 -gencode arch=compute_20,code=sm_20  -x cu -o  main.o main.cu 
+echo "main"
+
+nvcc -O3 --compile  -x c++ -o  read_reactor.o read_reactor.cpp 
+echo "read_reactor"
+
+nvcc --compile -O3 -gencode arch=compute_20,code=sm_20  -x cu -o  redistribute.o redistribute.cu 
+echo "redistribute"
+
+nvcc -O3 --compile  -x c++ -o  redistribute2.o redistribute2.cpp 
+echo "redistribute2"
+
+nvcc -O3 --compile  -x c++ -o  redistribute_initialise.o redistribute_initialise.cpp 
+echo "redistribute_initialise"
+
+nvcc --compile -O3 -gencode arch=compute_20,code=sm_20  -x cu -o  relaxation.o relaxation.cu 
+echo "relaxation"
+
+nvcc --compile -O3 -gencode arch=compute_20,code=sm_20  -x cu -o  streaming.o streaming.cu 
+echo "streaming"
+
+nvcc -O3 --compile  -x c++ -o  v_field.o v_field.cpp 
+echo "v_field"
+
+nvcc -O3 --compile  -x c++ -o  write_full_tecplot.o write_full_tecplot.cpp 
+echo "write_full_tecplot"
+
+nvcc -O3 --compile  -x c++ -o  write_tecplot.o write_tecplot.cpp 
+echo "write_tecplot"
+
+nvcc -O3 --compile  -x c++ -o  write_vorticity.o write_vorticity.cpp 
+echo "write_vorticity"
+
+
+nvcc  -link -o  "LBM2"  LBM_cuda.o bounceback.o kernels3.o check_density.o convective_bc.o global_defines.o init_density.o main.o read_reactor.o redistribute.o redistribute2.o redistribute_initialise.o relaxation.o streaming.o v_field.o write_full_tecplot.o write_tecplot.o write_vorticity.o
+
+rm *.o
+echo "done"

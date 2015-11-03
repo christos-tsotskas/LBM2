@@ -1,0 +1,18 @@
+Case: datum_design
+LBM Geometry:
+	X:680
+	Y:73
+	Z:73
+Configuration Parameters:
+	iterations: 10
+	check step: 100
+	nu: 0.0175
+	r_small: 7
+	reynolds: 100
+	s: 26
+	baffle position on X=59
+	CUDA threads per kernel: 512
+Performance Criteria
+	 pressure difference: 2.00509(pr_in:1777.22- pr_out:1775.22)
+	 vorticity: 3179.75
+Elapsed Time: 9 seconds 

@@ -1,0 +1,18 @@
+Case: compromise_design2
+LBM Geometry:
+	X:680
+	Y:73
+	Z:73
+Configuration Parameters:
+	iterations: 4000
+	check step: 2500
+	nu: 0.0175
+	r_small: 6.67897
+	reynolds: 195.732
+	s: 23.7849
+	baffle position on X=59
+	CUDA threads per kernel: 128
+Performance Criteria
+	 pressure difference: 107.857(pr_in:0- pr_out:0)
+	 vorticity: 13155.4
+Elapsed Time: 754 seconds 

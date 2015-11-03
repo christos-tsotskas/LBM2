@@ -1,0 +1,60 @@
+TARGET    = CUDA_LBM
+
+CUDA_HEADERS= global_defines.cuh kernels3.cuh utilities.cuh other_kernels.h
+CUDA_SRC= bounceback.cu check_density.cu convective_bc.cu global_defines.cu kernels3.cu LBM_cuda.cu main.cu redistribute.cu relaxation.cu streaming.cu
+CUDA_OBJ= bounceback.o check_density.o convective_bc.o global_defines.o kernels3.o LBM_cuda.o main.o redistribute.o relaxation.o streaming.o
+
+CPP_SRC=export_data.cpp init_density.cpp read_reactor.cpp redistribute2.cpp redistribute_initialise.cpp 
+CPP_OBJ=export_data.o init_density.o read_reactor.o redistribute2.o redistribute_initialise.o 
+
+COMPILER= nvcc
+CUDA_FLAGS= --compile -O3 -gencode arch=compute_20,code=sm_20  -x cu
+CPP_FLAGS= -O3 --compile  -x c++
+
+LINKER=nvcc
+ 
+
+
+
+$(TARGET) : $(CUDA_OBJ) $(CPP_OBJ)
+	echo "linking"
+	nvcc  -link -o  $@  LBM_cuda.o bounceback.o kernels3.o check_density.o convective_bc.o global_defines.o init_density.o main.o read_reactor.o redistribute.o redistribute2.o redistribute_initialise.o relaxation.o streaming.o export_data.o      
+	#$(LINKER) -link -o $@ $(CUDA_OBJ) $(CPP_OBJ) 
+
+	 
+#bounceback.o: global_defines.cuh
+#check_density.o: global_defines.cuh
+#convective_bc.o: global_defines.cuh
+#global_defines.o: global_defines.cuh
+#kernels3.o: global_defines.cuh
+#LBM_cuda.o: global_defines.cuh
+#main.o: global_defines.cuh
+#redistribute.o: global_defines.cuh
+#relaxation.o: global_defines.cuh
+#streaming.o: global_defines.cuh
+
+
+#export_data.o: global_defines.cuh
+#init_density.o: global_defines.cuh
+#read_reactor.o: global_defines.cuh
+#redistribute2.o: global_defines.cuh
+#redistribute_initialise.o: global_defines.cuh
+ 
+
+#kernels3.cuh
+#utilities.cuh
+
+
+
+$(CUDA_OBJ): $(CUDA_SRC) $(CUDA_HEADERS)	
+	$(COMPILER) $(CUDA_FLAGS) $< -o $@
+	
+	
+
+$(CPP_OBJ): $(CPP_SRC) $(CUDA_HEADERS)
+	$(COMPILER)  $(CPP_FLAGS) $< -o $@
+
+
+clean:
+	rm $(CUDA_OBJ) $(CPP_OBJ) $(TARGET)
+

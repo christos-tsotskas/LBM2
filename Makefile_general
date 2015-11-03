@@ -1,0 +1,36 @@
+TARGET    = myLBM2
+SRC_DIR   = src
+OBJ_DIR   = obj
+
+CPP_FILES = $(wildcard $(SRC_DIR)/*.cpp)
+CU_FILES  = $(wildcard $(SRC_DIR)/*.cu)
+
+H_FILES   = $(wildcard $(SRC_DIR)/*.h)
+CUH_FILES = $(wildcard $(SRC_DIR)/*.cuh)
+
+CXX_OBJ = $(addprefix $(OBJ_DIR)/,$(notdir $(CPP_FILES:.cpp=.o)))
+CUDA_OBJ = $(addprefix $(OBJ_DIR)/,$(notdir $(CU_FILES:.cu=.cu.o)))
+
+OBJS =  $(patsubst %.cpp,$(OBJ_DIR)/%.o,$(notdir $(CPP_FILES)))
+OBJS += $(patsubst %.cu,$(OBJ_DIR)/%.cu.o,$(notdir $(CU_FILES)))
+
+COMPILER= nvcc
+CUDA_FLAGS= -O3 --compile -x cu  -gencode arch=compute_20,code=sm_20  
+CXX_FLAGS=-O3 --compile  -x c++ 
+
+LINKER=nvcc
+
+$(TARGET) : $(OBJS)
+	$(LINKER) -link $(CUDA_OBJ) $(CXX_OBJ) -o $@
+#    echo "linking rule : " -o $@ $?
+	
+
+$(OBJ_DIR)/%.cu.o : $(SRC_DIR)/%.cu $(CUH_FILES)
+	$(COMPILER)  $(CUDA_FLAGS) $< -o $@
+#    echo ".cu.o rule : " $@ $<
+#    touch $@
+
+$(OBJ_DIR)/%.o : $(SRC_DIR)/%.cpp $(H_FILES)
+	$(COMPILER)  $(CXX_FLAGS) $< -o $@
+#    echo ".o rule : " $@ $<
+#    touch $@
