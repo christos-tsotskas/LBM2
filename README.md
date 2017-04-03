@@ -1,6 +1,10 @@
 # LBM2
 GPU-enabled Lattice Boltzmann Flow Solver
 
+# LICENCE
+
+By cloning/downloading/forking this repository (or part of it), you automatically agree and accept the license terms.
+
 Reference the following:
 
 ```
